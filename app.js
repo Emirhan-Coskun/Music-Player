@@ -33,8 +33,8 @@ class Music {
 const musicList = [
   new Music("Cambaz", "Mor ve Ötesi", "1.jpeg", "1.mp3"),
   new Music("Senden Daha Güzel", "Duman", "2.jpeg", "2.mp3"),
-  new Music("Giderim Senden", "Damla Arıcan", "3.jpeg", "3.mp3"),
-  new Music("Sigara", "Müslüm Gürses", "4.jpeg", "4.mp3"),
+  new Music(" Winner Takes It All", "ABBA", "3.jpeg", "3.mp3"),
+  new Music("Losing My Religion", "R.E.M.", "4.jpeg", "4.mp3"),
   new Music("Show Must Go On", "Queen", "5.jpeg", "5.mp3"),
 ];
 
