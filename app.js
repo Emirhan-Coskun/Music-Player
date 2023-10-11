@@ -1,5 +1,14 @@
 "use strict";
 
+const calculateTime = (toplamSaniye) => {
+  const dakika = Math.floor(toplamSaniye / 60);
+  const saniye = Math.floor(toplamSaniye % 60);
+  const guncellenenSaniye = saniye < 10 ? `0${saniye}` : `${saniye}`;
+  const sonuc = `${dakika}:${guncellenenSaniye}`;
+  return sonuc;
+};
+
+
 const container = document.querySelector(".container");
 const image = document.querySelector("#music-image");
 const title = document.querySelector("#music-details .title");
@@ -12,13 +21,18 @@ const currentTime = document.querySelector("#current-time");
 const progressBar = document.querySelector("#progress-bar");
 const volume = document.querySelector("#volume");
 const volumeBar = document.querySelector("#volume-bar");
+const ul = document.querySelector("ul");
+const collapseBtn = document.querySelector("#collapse-btn");
+const collapseList = document.querySelector("#collapse-list");
 
 class Music {
-  constructor(title, singer, img, file) {
+  constructor(title, singer, img, file, duration) {
     this.title = title;
     this.singer = singer;
     this.img = img;
     this.file = file;
+    this.duration = duration;
+    this.duration = calculateTime(audio.duration);
   }
 
   getName() {
@@ -28,14 +42,18 @@ class Music {
   getSinger() {
     return this.singer;
   }
+
+  getDuration() {
+    return this.duration;
+  }
 }
 
 const musicList = [
-  new Music("Cambaz", "Mor ve Ötesi", "1.jpeg", "1.mp3"),
-  new Music("Senden Daha Güzel", "Duman", "2.jpeg", "2.mp3"),
-  new Music(" Winner Takes It All", "ABBA", "3.jpeg", "3.mp3"),
-  new Music("Losing My Religion", "R.E.M.", "4.jpeg", "4.mp3"),
-  new Music("Show Must Go On", "Queen", "5.jpeg", "5.mp3"),
+  new Music("Cambaz", "Mor ve Ötesi", "1.jpeg", "1.mp3", ""),
+  new Music("Senden Daha Güzel", "Duman", "2.jpeg", "2.mp3", ""),
+  new Music(" Winner Takes It All", "ABBA", "3.jpeg", "3.mp3", ""),
+  new Music("Losing My Religion", "R.E.M.", "4.jpeg", "4.mp3", ""),
+  new Music("Show Must Go On", "Queen", "5.jpeg", "5.mp3", ""),
 ];
 
 class MusicPlayer {
@@ -71,6 +89,7 @@ let music = player.getMusic();
 window.addEventListener("load", () => {
   let music = player.getMusic();
   displayMusic(music);
+  displayMusicList(player.musicList);
 });
 
 function displayMusic(music) {
@@ -119,13 +138,6 @@ const playMusic = () => {
   audio.play();
 };
 
-const calculateTime = (toplamSaniye) => {
-  const dakika = Math.floor(toplamSaniye / 60);
-  const saniye = Math.floor(toplamSaniye % 60);
-  const guncellenenSaniye = saniye < 10 ? `0${saniye}` : `${saniye}`;
-  const sonuc = `${dakika}:${guncellenenSaniye}`;
-  return sonuc;
-};
 
 audio.addEventListener("loadedmetadata", () => {
   duration.textContent = calculateTime(audio.duration); // *****
@@ -171,3 +183,45 @@ volume.addEventListener("click", () => {
     volumeBar.value = 100;
   }
 });
+
+collapseBtn.addEventListener("click", function () {
+  const isCollapsed = collapseList.classList.contains("opened");
+  isCollapsed ? closeList() : openList();
+});
+
+function closeList() {
+  collapseList.classList.remove("opened");
+  collapseList.classList.add("closed");
+};
+
+function openList() {
+  collapseList.classList.remove("closed");
+  collapseList.classList.add("opened");
+};
+
+const displayMusicList = (list) => {
+  for (let i = 0; i < list.length; i++) {
+
+    let liTag =
+      `<li li-index="${i}" onclick="selectedMusic(this)" class="list-group-item d-flex justify-content-between align-items-center">
+        <span> ${list[i].getName()} </span>
+        <span id="music-${i}" class="badge bg-primary rounded-pill">${list[i].getDuration()}</span>
+        <audio class="music-${i}" src="mp3/${list[i].file}"></audio>
+      </li>`;
+
+    ul.innerHTML += liTag;
+
+    let liAudioDuration = ul.querySelector(`#music-${i}`);
+    let liAudioTag = ul.querySelector(`.music-${i}`);
+    liAudioTag.addEventListener("loadeddata", () => {
+      liAudioDuration.innerText = calculateTime(liAudioTag.duration);
+
+    });
+
+  }
+
+}
+
+const selectedMusicTag = (li) => {
+
+}

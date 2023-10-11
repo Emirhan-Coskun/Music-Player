@@ -5,27 +5,30 @@ body {
   height: 100vh;
 }
 
-.card{
-    width: 350px;
+ul{
+  overflow: hidden;
+  transition: 0.30s;
 }
 
-img{
-    height: 300px;
-    width: 350px;
+.card {
+  width: 350px;
 }
 
 .container {
   width: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#progress .times, .card-footer, .volume-container{
+#progress .times,
+.card-footer,
+.volume-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.volume-container i{
-    margin-right: 5px;
+.volume-container i {
+  margin-right: 5px;
 }
-
-
