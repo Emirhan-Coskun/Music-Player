@@ -7,8 +7,7 @@ const calculateTime = (toplamSaniye) => {
   const sonuc = `${dakika}:${guncellenenSaniye}`;
   return sonuc;
 };
-
-
+6;
 const container = document.querySelector(".container");
 const image = document.querySelector("#music-image");
 const title = document.querySelector("#music-details .title");
@@ -31,8 +30,6 @@ class Music {
     this.singer = singer;
     this.img = img;
     this.file = file;
-    this.duration = duration;
-    this.duration = calculateTime(audio.duration);
   }
 
   getName() {
@@ -42,18 +39,14 @@ class Music {
   getSinger() {
     return this.singer;
   }
-
-  getDuration() {
-    return this.duration;
-  }
 }
 
 const musicList = [
-  new Music("Cambaz", "Mor ve Ötesi", "1.jpeg", "1.mp3", ""),
-  new Music("Senden Daha Güzel", "Duman", "2.jpeg", "2.mp3", ""),
-  new Music(" Winner Takes It All", "ABBA", "3.jpeg", "3.mp3", ""),
-  new Music("Losing My Religion", "R.E.M.", "4.jpeg", "4.mp3", ""),
-  new Music("Show Must Go On", "Queen", "5.jpeg", "5.mp3", ""),
+  new Music("Cambaz", "Mor ve Ötesi", "1.jpeg", "1.mp3"),
+  new Music("Senden Daha Güzel", "Duman", "2.jpeg", "2.mp3"),
+  new Music(" Winner Takes It All", "ABBA", "3.jpeg", "3.mp3"),
+  new Music("Losing My Religion", "R.E.M.", "4.jpeg", "4.mp3"),
+  new Music("Show Must Go On", "Queen", "5.jpeg", "5.mp3"),
 ];
 
 class MusicPlayer {
@@ -67,7 +60,7 @@ class MusicPlayer {
   }
 
   next() {
-    if (this.index + 1 != this.musicList.length) {
+    if (this.index + 1 < this.musicList.length) {
       this.index++;
     } else {
       this.index = 0;
@@ -90,6 +83,7 @@ window.addEventListener("load", () => {
   let music = player.getMusic();
   displayMusic(music);
   displayMusicList(player.musicList);
+  isPlayingNow();
 });
 
 function displayMusic(music) {
@@ -117,6 +111,7 @@ function nextMusic() {
   let music = player.getMusic();
   displayMusic(music);
   playMusic();
+  isPlayingNow();
 }
 
 const prevMusic = () => {
@@ -124,6 +119,7 @@ const prevMusic = () => {
   let music = player.getMusic();
   displayMusic(music);
   playMusic();
+  isPlayingNow();
 };
 
 const pauseMusic = () => {
@@ -138,9 +134,8 @@ const playMusic = () => {
   audio.play();
 };
 
-
 audio.addEventListener("loadedmetadata", () => {
-  duration.textContent = calculateTime(audio.duration); // *****
+  duration.textContent = calculateTime(audio.duration);
   progressBar.max = Math.floor(audio.duration);
 });
 
@@ -192,36 +187,49 @@ collapseBtn.addEventListener("click", function () {
 function closeList() {
   collapseList.classList.remove("opened");
   collapseList.classList.add("closed");
-};
+}
 
 function openList() {
   collapseList.classList.remove("closed");
   collapseList.classList.add("opened");
-};
+}
 
 const displayMusicList = (list) => {
   for (let i = 0; i < list.length; i++) {
-
-    let liTag =
-      `<li li-index="${i}" onclick="selectedMusic(this)" class="list-group-item d-flex justify-content-between align-items-center">
+    let liTag = `<li li-index="${i}" onclick="selectedMusic(this)" class="list-group-item d-flex justify-content-between align-items-center">
         <span> ${list[i].getName()} </span>
-        <span id="music-${i}" class="badge bg-primary rounded-pill">${list[i].getDuration()}</span>
+        <span id="music-${i}" class="badge bg-primary rounded-pill"></span>
         <audio class="music-${i}" src="mp3/${list[i].file}"></audio>
       </li>`;
 
-    ul.innerHTML += liTag;
+    ul.insertAdjacentHTML("beforeend", liTag);
 
     let liAudioDuration = ul.querySelector(`#music-${i}`);
     let liAudioTag = ul.querySelector(`.music-${i}`);
     liAudioTag.addEventListener("loadeddata", () => {
       liAudioDuration.innerText = calculateTime(liAudioTag.duration);
-
     });
-
   }
+};
 
-}
+const selectedMusic = (li) => {
+  player.index = li.getAttribute("li-index");
+  displayMusic(player.getMusic());
+  playMusic();
+  isPlayingNow();
+};
 
-const selectedMusicTag = (li) => {
+const isPlayingNow = () => {
+  for (let li of ul.querySelectorAll("li")) {
+    if (li.classList.contains("playing")) {
+      li.classList.remove("playing");
+    }
+    if (li.getAttribute("li-index") == player.index) {
+      li.classList.add("playing");
+    }
+  }
+};
 
-}
+audio.addEventListener("ended", () => {
+  nextMusic();
+})

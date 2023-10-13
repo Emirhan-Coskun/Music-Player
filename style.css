@@ -5,9 +5,13 @@ body {
   height: 100vh;
 }
 
-ul{
+img {
+  height: 300px;
+}
+
+ul {
   overflow: hidden;
-  transition: 0.30s;
+  transition: 0.3s;
 }
 
 .card {
@@ -32,3 +36,19 @@ ul{
 .volume-container i {
   margin-right: 5px;
 }
+
+li.playing {
+  background-color: #0b5eb7;
+  color: #fff;
+}
+
+#collapse-list li{
+  cursor: pointer;
+}
+
+#collapse-list li:hover {
+  background-color: #add8e6;
+  color: black;
+  transition: 0.4s;
+}
+
